@@ -12,6 +12,17 @@ import { ENV } from "./lib/env.js";
 import { app, server } from "./lib/socket.js";
 import User from "./models/User.js";
 import bcrypt from "bcryptjs";
+import cors from "cors";
+
+app.use(
+  cors({
+    origin: [
+      "https://chat-application-q2lrb3s7y-sonanidivy1008-gmailcoms-projects.vercel.app",
+      "http://localhost:5173"
+    ],
+    credentials: true,
+  })
+);
 
 const __dirname = path.resolve();
 
