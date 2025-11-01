@@ -33,17 +33,29 @@ export const useChatStore = create((set, get) => ({
       set({ isUsersLoading: false });
     }
   },
-  getMyChatPartners: async () => {
-    set({ isUsersLoading: true });
-    try {
-      const res = await axiosInstance.get("/messages/chats");
-      set({ chats: res.data });
-    } catch (error) {
-      toast.error(error.response.data.message);
-    } finally {
-      set({ isUsersLoading: false });
-    }
-  },
+getMyChatPartners: async () => {
+  set({ isUsersLoading: true });
+  try {
+    const res = await axiosInstance.get("/messages/chats");
+    console.log("Fetched chats:", res.data);
+
+    // Check if data contains a 'chats' field or is directly an array
+    const chatsData = Array.isArray(res.data)
+      ? res.data
+      : Array.isArray(res.data.chats)
+      ? res.data.chats
+      : [];
+
+    set({ chats: chatsData });
+  } catch (error) {
+    console.error("Error fetching chat partners:", error);
+    toast.error(error?.response?.data?.message || "Failed to load chats");
+    set({ chats: [] });
+  } finally {
+    set({ isUsersLoading: false });
+  }
+},
+
 
   getMessagesByUserId: async (userId) => {
     set({ isMessagesLoading: true });
